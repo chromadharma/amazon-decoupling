@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methods — Amazon deforestation and growth</title>
+<meta name="description" content="Every data source, every join with its measured error rate, and every decision that could have gone otherwise in the Amazon decoupling panel.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav"><div class="wrap">
+  <a class="mark" href="index.html">44°W</a>
+  <a class="page" href="index.html">The argument</a>
+  <a class="page" href="maps.html">Maps &amp; charts</a>
+  <a class="page" href="methods.html" aria-current="page">Methods</a>
+  <a class="page" href="formulas.html">Formulas</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Sources, joins, decisions</p>
+  <h1>Methods
+    <span class="sub">What the data is, how it was joined, what each join costs, and every choice that could have gone the other way</span>
+  </h1>
+  <p class="byline"><b>Sahasrik Ragani</b> · 772 municipalities · 30 scripts · 207 provenance-stamped downloads · 6.3 GB</p>
+</header>
+
+<main>
+
+<section>
+  <p class="beat">The pipeline</p>
+  <h2>Nine stages, and why they are kept apart</h2>
+
+  <p>Every byte enters through one fetch function that retries, then stamps the URL, a UTC timestamp, the size and a SHA-256 hash into a provenance manifest. Nothing is estimated straight from an API. Each stage writes a file the next stage reads, so any one of them can be re-run alone.</p>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Stage</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td><b>1 Fetch</b></td><td>Retry, then hash and log to <code>data/raw/_manifest.jsonl</code>. 207 entries.</td></tr>
+      <tr><td><b>2 Masters</b></td><td>The 772-municipality list, the geometry, the biome overlay. Built first; everything joins to it.</td></tr>
+      <tr><td><b>3 Acquire</b></td><td>One script per source, each writing a tidy interim table.</td></tr>
+      <tr><td><b>4 Attribute</b></td><td>The spatial work: deforestation polygons and forest-loss pixels assigned to municipalities.</td></tr>
+      <tr><td><b>5 Panel</b></td><td>Assemble the municipality × year grid, deflate, derive rates and growth.</td></tr>
+      <tr><td><b>6 Audit</b></td><td>Eight checks on identifiers, coverage and provenance. A non-zero exit blocks a rebuild.</td></tr>
+      <tr><td><b>7 Estimate</b></td><td>The method ladder, in order, writing to <code>results/</code>.</td></tr>
+      <tr><td><b>8 Cases</b></td><td>Dossiers for municipalities the panel selected, not chosen in advance.</td></tr>
+      <tr><td><b>9 Figures</b></td><td>Read only from <code>results/</code>, never from a scrollback.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The separation is not tidiness. Three of the data-integrity bugs found in this build were invisible in the code and visible only in a written file — a column of fabricated zeroes, two files with the same hash, and an input set that was never recorded. If estimation had read straight from the source, none of them could have been caught after the fact.</p>
+</section>
+
+<section>
+  <p class="beat">Sources</p>
+  <h2>Where every number comes from</h2>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Layer</th><th>Source</th><th>Brazilian state?</th></tr></thead>
+    <tbody>
+      <tr><td>Annual clear-cut deforestation</td><td>INPE PRODES, via the TerraBrasilis WFS</td><td><b>yes</b></td></tr>
+      <tr><td>Near-real-time disturbance alerts</td><td>INPE DETER, same geoserver</td><td><b>yes</b></td></tr>
+      <tr><td>Municipal GDP and gross value added</td><td>IBGE SIDRA table 5938</td><td><b>yes</b></td></tr>
+      <tr><td>Population</td><td>IBGE SIDRA table 6579, censuses 2000 / 2010 / 2022</td><td><b>yes</b></td></tr>
+      <tr><td>Inflation index</td><td>IBGE SIDRA table 1737 (IPCA)</td><td><b>yes</b></td></tr>
+      <tr><td>Farm size distribution</td><td>IBGE Agricultural Censuses 2006 and 2017</td><td><b>yes</b></td></tr>
+      <tr><td>Human development, poverty, income Gini</td><td>Atlas do Desenvolvimento Humano (UNDP / IPEA / FJP)</td><td>part</td></tr>
+      <tr><td>Municipal boundaries, biome map, share-inside</td><td>IBGE 2022 municipal mesh, Biomas 250k</td><td><b>yes</b></td></tr>
+      <tr><td>Independent forest loss</td><td>Hansen Global Forest Change 2025 v1.13, U. Maryland</td><td>no</td></tr>
+      <tr><td>Rural conflict and violence</td><td>Comissão Pastoral da Terra, <i>Conflitos no Campo Brasil</i></td><td>no</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The column on the right is doing argumentative work. The core finding — that clearing produces little output, no general growth and no development gain — rests entirely on the rows marked yes. The two rows marked no are corroboration: Hansen independently confirms the measurement gap, and the conflict archive supports a claim the state publishes no data on at all. Keeping the load-bearing argument inside the state's own accounting is deliberate, because an argument that survives there cannot be dismissed by attacking the source.</p>
+</section>
+
+<section>
+  <p class="beat">Joins</p>
+  <h2>Every join, and what it costs</h2>
+
+  <p>A join is the assertion that two datasets are about the same thing, which makes it the most dangerous step in any build. Each one below has a key, a failure mode, and where possible a measured error rate.</p>
+
+  <h3>Deforestation polygons → municipality</h3>
+
+  <p>This is the join the literature does not disclose. The official product ships state and satellite path, but <strong>no municipality field</strong>. Every municipal deforestation figure published in this field is therefore somebody's spatial join, made with somebody's boundary vintage and somebody's rule for polygons that straddle a border, and none of them say which.</p>
+
+  <div class="tablewrap">
+  <table>
+    <tbody>
+      <tr><td>Method</td><td>Representative point (guaranteed interior, unlike a centroid) → point-in-polygon on the IBGE 2022 mesh</td></tr>
+      <tr><td>Features</td><td class="num">835,277</td></tr>
+      <tr><td>Matched</td><td class="num">835,268 — <b>9 unmatched, 0.25 km² of 139,868 km²</b></td></tr>
+      <tr><td>Straddling a boundary</td><td class="num">1.54% of polygons</td></tr>
+      <tr><td><b>Misallocation error</b></td><td class="num"><b>0.41%</b> of the national annual total moves between municipalities under whole-polygon assignment versus true areal apportionment</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>0.41% is the number to quote. It is what it costs to assign a straddling polygon whole rather than splitting it. It is small — and it is disclosed and measured, which is the point.</p>
+
+  <h3>Alerts → municipality</h3>
+  <p>Trivial, and worth saying so: the alert product ships a municipality code. Zero of 457,815 alerts carry a code outside the master list and none are null. No name matching, no spatial work, no error. When a source does the join for you, say that it did.</p>
+
+  <h3>Forest-loss pixels → municipality</h3>
+  <p>Municipal polygons are rasterised onto the Hansen grid, so a boundary resolves at 30 metres and the straddling problem does not arise. Pixel area is computed analytically per raster row from its latitude (see <a href="formulas.html">formulas §8</a>) rather than by reprojecting, because the loss year is a class code and resampling it would invent years that were never recorded.</p>
+
+  <h3>Conflict occurrences → municipality</h3>
+  <p>The hardest join here, because the archive publishes PDFs carrying municipality <em>names</em> and no codes.</p>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Tier</th><th>Rule</th><th>Rows</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>name + state, exact</td><td class="num">27,288</td></tr>
+      <tr><td>2</td><td>name nationally unique across all 5,570 Brazilian municipalities</td><td class="num">4,280</td></tr>
+      <tr><td>3</td><td>unmatched</td><td class="num">5,362</td></tr>
+      <tr><td><b>—</b></td><td><b>join rate</b></td><td class="num"><b>85.5%</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>The parser that produced those rows is validated at <strong>91% against the reports' own printed totals</strong> across 159 state-years. Three failure modes bit at least once. A conflict listed as spanning three municipalities becomes three rows, and counting it whole in each gives a regional total of 11,740 land conflicts against 8,732 apportioned fractionally, a spill ratio of 1.34 — both series are carried. Splitting names on the word "e" would break <i>Pontes e Lacerda</i>, so the splitter uses punctuation only. And an alias table entry pointing at a municipality that does not exist cost 68 rows before the audit caught it.</p>
+</section>
+
+<section>
+  <p class="beat">Decisions</p>
+  <h2>Choices that could have gone otherwise</h2>
+
+  <h3>The universe is the agency's own list, not a hand-built one</h3>
+  <p>Building the municipality list by hand from "the nine states" gets Maranhão wrong, because only the part west of the forty-fourth meridian is inside. The agency publishes its own share-inside figure for every municipality, which a hand-built list does not have and which turns out to matter enormously.</p>
+
+  <h3>Two calendars, never merged silently</h3>
+  <p>The deforestation year runs 1 August to 31 July; the statistical year is the calendar year. About 58% of a deforestation year falls in the year it is labelled with. The panel carries both alignments and refuses to pick one, because several of the hypothesised lags are one to three years and the misalignment is worth five months of that.</p>
+
+  <h3>Public administration netted out of the economy</h3>
+  <p>A municipality whose GDP rises because federal transfers rose has more value <em>allocated</em> to it, not more value <em>produced</em> in it. One specification therefore reports output net of public administration, and it is the one where the growth result actually clears significance: +4.15 with p = 0.014, against +2.20 and p = 0.060 for the headline. This is a theoretical distinction — use value against exchange value — implemented as a single subtraction, and it is the clearest example in the build of theory doing work inside the pipeline.</p>
+
+  <h3>Structural zeroes excluded, not zeroed</h3>
+  <p>133 of the 772 municipalities record no deforestation in any year, and their mean Amazônia-biome share is 0.16. They sit outside the forest mask. Leaving them in with a value of zero estimates an average over a population containing cases where the outcome cannot occur, and attenuates every coefficient. The modelling sample is the 546 municipalities with at least 5% biome. <span class="where" style="display:inline">Open question: 546 with the biome cut, or all 772 with a biome-share control. It affects every coefficient.</span></p>
+
+  <h3>A zero only where the instrument was looking</h3>
+  <p>The rule that fixed two of the three data-integrity bugs. A municipality-year gets a zero only if its source published that year. The deforestation product publishes from 2008; the conflict archive covers 17 of 23 years. Outside those windows the value is <strong>missing</strong>, not zero, and the windows are derived from the data rather than hard-coded so they stay correct when the sources extend.</p>
+
+  <h3>Deflation by a national index, with a known bias</h3>
+  <p>There is no municipal deflator. In frontier municipalities land, freight and cattle prices move differently from the national consumer basket, so every real series carries a known bias of unknown sign. Reported, not hidden.</p>
+</section>
+
+<section>
+  <p class="beat">Where the qualitative meets the quantitative</p>
+  <h2>Four places a technical choice is a substantive one</h2>
+
+  <p>The methodological claim this project makes is not that numbers illustrate experience. It is that <strong>every measurement choice already contains a claim about what kind of thing is being measured</strong>, and that making those claims explicit is what turns critical political economy from a vocabulary into a method.</p>
+
+  <p><strong>The 6.25-hectare threshold is a class filter.</strong> A family clearing two hectares is not recorded as deforestation; a rancher clearing two hundred is. It is a deliberate engineering choice to control false positives, and its consequence is that the official record of forest loss is systematically better at seeing large actors than small ones. Every statistic built on it inherits that.</p>
+
+  <p><strong>A conflict count is a duration, not an intensity.</strong> The archive re-registers a continuing situation each year it stays unresolved, so eighteen years of one invasion and eighteen separate incursions score identically. For the people living it those are completely different conditions. Measured across the region, the median Roraima municipality holds 58% of its conflict record in a single case against 5–16% elsewhere — see the <a href="maps.html">maps page</a>.</p>
+
+  <p><strong>Fixed effects deliberately discard the most dramatic comparison.</strong> Removing everything permanent about a place is what makes the estimate credible, and it means the design throws away the contrast between an Indigenous territory in Roraima and a soy municipality in Mato Grosso, which is the comparison a reader most wants explained. The panel can only learn from change within a place over time. That is not a limitation to apologise for; it is the division of labour that justifies reading the cases separately.</p>
+
+  <p><strong>A denominator decides what "the place" is.</strong> Dividing by the whole municipal area for a Maranhão municipality that is 4.7% inside the Legal Amazon asserts that the other 95.3% is part of the Amazon story. It is not. Choosing the effective in-boundary area is a claim about the object of study, disguised as arithmetic — and getting it wrong understated a rate twenty-one-fold.</p>
+</section>
+
+<section>
+  <p class="beat">Limits</p>
+  <h2>What this design cannot do</h2>
+
+  <div class="note warn">
+    <p class="beat">Stated plainly, before anyone has to extract it</p>
+    <p><b>Nothing here is causal.</b> The design shows that in the years a municipality cleared more, it also recorded more agricultural value, more land conflict and more concentrated farmland than the year effect predicts. Anything that varies within a municipality over time and moves both sides at once escapes it.</p>
+    <p><b>There is no data on who benefits.</b> "Concentrated" is measured. "A handful of people" is an inference no series here counts — nothing in this build observes an owner, a firm, or a household.</p>
+    <p><b>The welfare window ends in 2010.</b> The human development series is published for census years, so the properly powered null is a statement about the 2000s, not about the period the argument is mostly about.</p>
+    <p><b>The conflict archive counts what was reported.</b> Municipality fixed effects absorb the permanent reporting density of a place, but not changes in reporting effort over time.</p>
+    <p><b>The radar workstream is withdrawn.</b> It was not reproducible; see <a href="formulas.html">formulas §9</a>.</p>
+  </div>
+
+  <p>The one design in the plan that could support the word <em>caused</em> is a natural experiment on protected areas that were legally shrunk on a known date, comparing clearing in the excised portion against the retained portion of the same reserve. It is specified and not built.</p>
+</section>
+
+<div class="pager">
+  <a href="index.html">← The argument</a>
+  <a href="maps.html">← Maps &amp; charts</a>
+  <a href="formulas.html">← Formulas</a>
+</div>
+
+</main>
+
+<footer>
+  <p><b>Reproducibility.</b> All sources are public and none require a key. Raw downloads carry a URL, a UTC retrieval timestamp and a SHA-256 hash. Estimation reads only from written interim files, and the figure scripts read only from written result files. An identifier audit runs eight checks and blocks a rebuild on failure.</p>
+  <p><b>Sahasrik Ragani</b> · all currency in constant 2023 reais.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulas — Amazon deforestation and growth</title>
+<meta name="description" content="Every equation used in the Amazon decoupling panel, written out: the fixed-effects specification, cluster-robust errors, the land Gini, the transforms and the corrections.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav"><div class="wrap">
+  <a class="mark" href="index.html">44°W</a>
+  <a class="page" href="index.html">The argument</a>
+  <a class="page" href="maps.html">Maps &amp; charts</a>
+  <a class="page" href="methods.html">Methods</a>
+  <a class="page" href="formulas.html" aria-current="page">Formulas</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Every equation, written out</p>
+  <h1>The formulas
+    <span class="sub">What was computed, in the notation it was computed in, with the reason each choice was made</span>
+  </h1>
+  <p class="byline"><b>Sahasrik Ragani</b> · implementations in <code>src/04_econ/panel_tools.py</code> and <code>src/02_acquire/</code></p>
+</header>
+
+<main>
+
+<section>
+  <p class="beat">1 — The driver</p>
+  <h2>The clearing rate, and the denominator that cost a finding</h2>
+
+  <div class="formula">
+    <p class="name">Clearing rate</p>
+    <div class="math"><span class="v">c</span><sub>it</sub> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="v">D</span><sub>it</sub></span><span class="den"><span class="v">A</span><sub>i</sub><sup>eff</sup></span></span>
+      <span class="op">,</span>
+      <span class="v">A</span><sub>i</sub><sup>eff</sup> <span class="op">=</span>
+      <span class="v">A</span><sub>i</sub> <span class="op">×</span>
+      <span class="frac"><span class="num">PORC_INT<sub>i</sub></span><span class="den">100</span></span>
+    </div>
+    <p class="where"><b>D</b><sub>it</sub> is clear-cut area mapped in municipality <b>i</b> in PRODES year <b>t</b>, in km². <b>A</b><sub>i</sub> is the municipality's total area and <b>PORC_INT</b> is the statistics agency's own figure for the percentage of it lying inside the Legal Amazon.</p>
+  </div>
+
+  <p>Dividing by the whole municipal area looks obviously right and is wrong for twenty municipalities. The Legal Amazon boundary runs down the forty-fourth meridian through Maranhão, and the statistics agency ships those straddling municipalities whole. Morros is 4.7% inside the boundary, so the naive denominator understated its clearing rate by a factor of twenty-one. Correcting this moved the land-Gini result from p = 0.021 to p = 0.073 — the paper's then-central finding stopped clearing the five per cent threshold. The correction was right and it cost a finding.</p>
+
+  <div class="note warn">
+    <p class="beat">And the mirror image</p>
+    <p>The Hansen forest-loss series is measured over the <b>whole</b> municipal polygon, so it needs the <b>whole</b> area. Using the effective area there gave nine Maranhão straddlers a cleared share above 1 — São João do Soter, 0.084% inside, came out at 609. <b>A denominator is correct only relative to the footprint its numerator was measured over</b>, and two instruments in one table can need two different ones.</p>
+  </div>
+</section>
+
+<section>
+  <p class="beat">2 — The main specification</p>
+  <h2>Two-way fixed effects</h2>
+
+  <div class="formula">
+    <p class="name">Panel regression, edges A1–A2 and C2–C4</p>
+    <div class="math">
+      Δ<span class="fn">ln</span> <span class="v">y</span><sub>it</sub> <span class="op">=</span>
+      <span class="v">β</span><sub>0</sub><span class="v">c</span><sub>it</sub> <span class="op">+</span>
+      <span class="v">β</span><sub>1</sub><span class="v">c</span><sub>i,t−1</sub> <span class="op">+</span>
+      <span class="v">β</span><sub>2</sub><span class="v">c</span><sub>i,t−2</sub> <span class="op">+</span>
+      <span class="v">α</span><sub>i</sub> <span class="op">+</span>
+      <span class="v">λ</span><sub>t</sub> <span class="op">+</span>
+      <span class="v">ε</span><sub>it</sub>
+    </div>
+    <p class="where"><b>α</b><sub>i</sub> is a municipality fixed effect and <b>λ</b><sub>t</sub> a year fixed effect. The outcome is a first difference of logs, which is approximately a proportional growth rate.</p>
+  </div>
+
+  <p>The two sets of fixed effects are what make the question narrow enough to be worth asking. The municipality effect removes everything permanent about a place — soil, distance to a port, how agricultural it already is, how densely the conflict archive covers it. The year effect removes everything common to a year — the soy price, the exchange rate, national enforcement policy, a drought. What is left is the within-place, within-year wobble, which is why the coefficients are small.</p>
+
+  <p>What it does <em>not</em> remove is anything varying within a municipality over time that moves both sides at once: a new road, a change of mayor, a land grab getting organised. That is the gap through which causation escapes, and it is why nothing on this site claims a cause.</p>
+
+  <div class="formula">
+    <p class="name">How the effects are absorbed</p>
+    <div class="math">
+      <span class="v">ỹ</span><sub>it</sub> <span class="op">=</span>
+      <span class="v">y</span><sub>it</sub> <span class="op">−</span>
+      <span class="v">ȳ</span><sub>i·</sub> <span class="op">−</span>
+      <span class="v">ȳ</span><sub>·t</sub> <span class="op">+</span>
+      <span class="v">ȳ</span>
+    </div>
+    <p class="where">Iterated two-way demeaning (alternating projections) rather than dummy variables, because 546 municipality dummies plus 19 year dummies is a matrix nobody needs to invert. Applied to the outcome and to every regressor, then ordinary least squares on the demeaned data.</p>
+  </div>
+</section>
+
+<section>
+  <p class="beat">3 — The uncertainty</p>
+  <h2>Cluster-robust variance, and the correction that is admitted to be imperfect</h2>
+
+  <div class="formula">
+    <p class="name">Cameron–Gelbach–Miller cluster-robust variance</p>
+    <div class="math">
+      <span class="hat"><span class="v">V</span></span> <span class="op">=</span>
+      <span class="paren">(</span><span class="v">X</span><span class="op">′</span><span class="v">X</span><span class="paren">)</span><sup>−1</sup>
+      <span class="paren">(</span>
+      <span class="big">Σ</span><sub>g=1</sub><sup>G</sup>
+      <span class="v">X</span><sub>g</sub><span class="op">′</span>
+      <span class="hat"><span class="v">u</span></span><sub>g</sub>
+      <span class="hat"><span class="v">u</span></span><sub>g</sub><span class="op">′</span>
+      <span class="v">X</span><sub>g</sub>
+      <span class="paren">)</span>
+      <span class="paren">(</span><span class="v">X</span><span class="op">′</span><span class="v">X</span><span class="paren">)</span><sup>−1</sup>
+      <span class="op">·</span> <span class="v">c</span>
+    </div>
+    <div class="math">
+      <span class="v">c</span> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="v">G</span></span><span class="den"><span class="v">G</span> − 1</span></span>
+      <span class="op">·</span>
+      <span class="frac"><span class="num"><span class="v">N</span> − 1</span><span class="den"><span class="v">N</span> − <span class="v">k</span></span></span>
+    </div>
+    <p class="where"><b>g</b> indexes clusters (municipalities), <b>G</b> = 546, <b>N</b> is observations and <b>k</b> the number of regressors. Test statistics are referred to a <i>t</i> distribution with <b>G</b> − 1 degrees of freedom, not the normal.</p>
+  </div>
+
+  <p>Observations within a municipality are not independent of one another, and treating them as if they were would produce standard errors that are too small and significance that is not there. The honest caveat is in the correction factor: <b>k</b> counts only the explicit regressors, when the absorbed fixed effects are parameters too. With 546 clusters the understatement is second-order, but it is an understatement and it is recorded rather than ignored.</p>
+
+  <div class="formula">
+    <p class="name">Within R², the number the p-values hide</p>
+    <div class="math">
+      <span class="v">R</span><sup>2</sup><sub>within</sub> <span class="op">=</span>
+      1 <span class="op">−</span>
+      <span class="frac"><span class="num"><span class="hat"><span class="v">u</span></span><span class="op">′</span><span class="hat"><span class="v">u</span></span></span><span class="den"><span class="v">ỹ</span><span class="op">′</span><span class="v">ỹ</span></span></span>
+    </div>
+    <p class="where">Computed on the demeaned data, so it is the share of <i>within-municipality, within-year</i> variation explained — not total variation, which the fixed effects would flatter enormously.</p>
+  </div>
+
+  <p>This is the statistic that changes how the whole project reads. Clearing explains 0.33% of within-municipality variation in agricultural growth, 0.13% for total output, and 0.04% for population. The effects are real and precisely estimated and they are almost irrelevant to the municipal economy. A significance test cannot tell you that; only this can.</p>
+</section>
+
+<section>
+  <p class="beat">4 — Reading a coefficient</p>
+  <h2>From a log-point coefficient to a number a person can hold</h2>
+
+  <div class="formula">
+    <p class="name">Effect of a one-standard-deviation increase in clearing</p>
+    <div class="math">
+      %Δ<span class="v">y</span> <span class="op">=</span>
+      <span class="paren">(</span>
+      <span class="fn">exp</span><span class="paren">(</span><span class="hat"><span class="v">β</span></span><span class="v">σ</span><sub>c</sub><span class="paren">)</span>
+      <span class="op">−</span> 1 <span class="paren">)</span> <span class="op">×</span> 100
+    </div>
+    <p class="where"><b>σ</b><sub>c</sub> = 0.00338, the standard deviation of the clearing rate across the estimation sample. The median municipality-year clears 0.064% of itself, so a one-unit change in <b>c</b> — clearing a whole municipality in a year — is far outside anything observed and the raw coefficient must never be quoted as if it were an effect size.</p>
+  </div>
+
+  <div class="formula">
+    <p class="name">Value added per square kilometre cleared</p>
+    <div class="math">
+      Δ<span class="v">V</span><sub>i</sub> <span class="op">=</span>
+      <span class="v">V</span><sub>i</sub>
+      <span class="paren">(</span>
+      <span class="fn">exp</span> <span class="paren">(</span>
+      <span class="hat"><span class="v">β</span></span><sub>0</sub> <span class="op">·</span>
+      <span class="frac"><span class="num">1</span><span class="den"><span class="v">A</span><sub>i</sub><sup>eff</sup></span></span>
+      <span class="paren">)</span> <span class="op">−</span> 1 <span class="paren">)</span>
+    </div>
+    <p class="where"><b>V</b><sub>i</sub> is the municipality's annual agricultural value added. In a median municipality — 2,886 km² effective area, R$59.2m value added — clearing one km² gives about <b>R$163,000</b> in that year, or <b>R$1,634 per hectare</b>, in constant 2023 reais.</p>
+  </div>
+
+  <p>Four caveats belong to that number or it is not honest. It is a one-year association and the lag coefficients are indistinguishable from zero, so nothing here says it persists; it is value added rather than profit, before the cost of clearing and running the land; it is not the private return, which on this frontier includes land value on regularisation and which the agricultural accounts are not built to see; and it sits on a model explaining 0.33% of the variation.</p>
+</section>
+
+<section>
+  <p class="beat">5 — The long differences</p>
+  <h2>One observation per municipality, across a decade</h2>
+
+  <div class="formula">
+    <p class="name">Cross-sectional long difference, edges B1–B3 and C1–C1b</p>
+    <div class="math">
+      Δ<span class="v">y</span><sub>i</sub> <span class="op">=</span>
+      <span class="v">α</span> <span class="op">+</span>
+      <span class="v">β</span><span class="v">d</span><sub>i</sub> <span class="op">+</span>
+      <span class="v">γ</span><span class="op">′</span><span class="v">x</span><sub>i</sub> <span class="op">+</span>
+      <span class="v">ε</span><sub>i</sub>
+      <span class="op">,</span>
+      <span class="v">d</span><sub>i</sub> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="big">Σ</span><sub>t∈T</sub> <span class="v">D</span><sub>it</sub></span><span class="den"><span class="v">A</span><sub>i</sub></span></span>
+    </div>
+    <p class="where"><b>d</b><sub>i</sub> is the cumulative share of the municipality cleared over the window <b>T</b>, and <b>x</b><sub>i</sub> holds the controls — for the land edges, contemporaneous agricultural growth, which is what makes the result conditional. Heteroskedasticity-robust (HC1) errors; there is one observation per municipality, so there is nothing to cluster.</p>
+  </div>
+
+  <div class="note">
+    <p class="beat">The window has to span the outcome</p>
+    <p>The first version of the welfare test used a clearing window of 2008–2010 against a human development change measured 2000–2010: a driver covering three of its outcome's ten years, which tests nothing. Substituting the Hansen series, which runs from 2001, made the standard errors fall by a factor of five and turned an uninformative null into a real one (+0.005, p = 0.79). <b>Both specifications are plotted in Figure 3</b>, because the difference between them is the finding.</p>
+  </div>
+</section>
+
+<section>
+  <p class="beat">6 — Transforms</p>
+  <h2>Counts with a lot of zeroes, and inequality from grouped data</h2>
+
+  <div class="formula">
+    <p class="name">Inverse hyperbolic sine, for conflict counts</p>
+    <div class="math">
+      <span class="fn">asinh</span><span class="paren">(</span><span class="v">x</span><span class="paren">)</span>
+      <span class="op">=</span>
+      <span class="fn">ln</span> <span class="paren">(</span>
+      <span class="v">x</span> <span class="op">+</span>
+      <span class="op">√</span><span class="paren">(</span><span class="v">x</span><sup>2</sup> <span class="op">+</span> 1<span class="paren">)</span>
+      <span class="paren">)</span>
+    </div>
+    <p class="where">Behaves like a logarithm for large values and is defined at zero, which a log is not. 69.7% of covered municipality-years record no land conflict at all.</p>
+  </div>
+
+  <p>This transform also makes a claim. It treats a move from zero to one conflict as a larger change than ten to eleven, which asserts that <strong>the first recorded conflict in a place is the significant event</strong>. That is defensible and it is a choice, so it belongs in the text rather than in a footnote.</p>
+
+  <div class="formula">
+    <p class="name">Land Gini from size-class tables, trapezoid Lorenz</p>
+    <div class="math">
+      <span class="v">G</span> <span class="op">=</span> 1 <span class="op">−</span>
+      <span class="big">Σ</span><sub>k=1</sub><sup>K</sup>
+      <span class="paren">(</span><span class="v">p</span><sub>k</sub> <span class="op">−</span> <span class="v">p</span><sub>k−1</sub><span class="paren">)</span>
+      <span class="paren">(</span><span class="v">L</span><sub>k</sub> <span class="op">+</span> <span class="v">L</span><sub>k−1</sub><span class="paren">)</span>
+    </div>
+    <p class="where"><b>p</b><sub>k</sub> is the cumulative share of establishments up to size class <b>k</b> and <b>L</b><sub>k</sub> the cumulative share of area they hold, both sorted ascending by area per holding.</p>
+  </div>
+
+  <p>Grouped data makes this a <strong>lower bound</strong>: inequality inside a size class is invisible to it. Two corrections mattered more than the formula did. Producers reporting no land at all — <i>produtor sem área</i> — belong at the zero-area end of the distribution, and sorting them by label put them at the wrong end, which moved the regional mean by roughly 0.15 of a Gini point and flipped the sign of the decadal change. And 2017's split top classes are collapsed to the 2006 structure at a 2,500-hectare ceiling, because otherwise the two censuses are not the same instrument.</p>
+
+  <p>This is why the load-bearing land result is the share of farmland held in units of 1,000 hectares or more rather than the Gini. It needs no within-class interpolation and no Lorenz assumption, and it is the version that survived the denominator correction.</p>
+</section>
+
+<section>
+  <p class="beat">7 — Multiple testing</p>
+  <h2>Seventy-eight tests, and what survives a false-discovery correction</h2>
+
+  <div class="formula">
+    <p class="name">Benjamini–Hochberg, controlling the false discovery rate</p>
+    <div class="math">
+      reject <span class="v">H</span><sub>(i)</sub> for all <span class="v">i</span> <span class="op">≤</span>
+      <span class="fn">max</span> <span class="paren">{</span> <span class="v">i</span> <span class="op">:</span>
+      <span class="v">p</span><sub>(i)</sub> <span class="op">≤</span>
+      <span class="frac"><span class="num"><span class="v">i</span></span><span class="den"><span class="v">m</span></span></span>
+      <span class="v">q</span> <span class="paren">}</span>
+    </div>
+    <p class="where"><b>p</b><sub>(1)</sub> ≤ … ≤ <b>p</b><sub>(m)</sub> are the sorted p-values, <b>m</b> = 78 pairwise tests over 13 variables, and <b>q</b> = 0.10. The critical p-value came out at 0.0749 and 62 of the 78 pairs survived.</p>
+  </div>
+
+  <p>Thirteen variables generate 78 pairwise tests, of which about four would clear the conventional five per cent threshold under a true global null. That arithmetic is why the twenty-six edges were written down before estimation: it converts "we found some significant correlations" into "we tested twenty-six hypotheses and <em>k</em> survived", and only the second is research. It is also what makes a refuted prediction reportable rather than embarrassing.</p>
+</section>
+
+<section>
+  <p class="beat">8 — Measurement</p>
+  <h2>Two geometric quantities the results depend on</h2>
+
+  <div class="formula">
+    <p class="name">Graticule cell area on the WGS84 ellipsoid, per raster row</p>
+    <div class="math">
+      <span class="v">a</span><span class="paren">(</span><span class="v">φ</span><span class="paren">)</span> <span class="op">=</span>
+      <span class="paren">(</span><span class="v">M</span><span class="paren">(</span><span class="v">φ</span><span class="paren">)</span> <span class="v">δ</span><span class="paren">)</span>
+      <span class="op">·</span>
+      <span class="paren">(</span><span class="v">N</span><span class="paren">(</span><span class="v">φ</span><span class="paren">)</span>
+      <span class="fn">cos</span> <span class="v">φ</span> <span class="v">δ</span><span class="paren">)</span>
+    </div>
+    <div class="math">
+      <span class="v">N</span> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="v">a</span></span><span class="den"><span class="v">w</span></span></span>
+      <span class="op">,</span>
+      <span class="v">M</span> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="v">a</span><span class="paren">(</span>1 − <span class="v">e</span><sup>2</sup><span class="paren">)</span></span><span class="den"><span class="v">w</span><sup>3</sup></span></span>
+      <span class="op">,</span>
+      <span class="v">w</span> <span class="op">=</span>
+      <span class="op">√</span><span class="paren">(</span>1 − <span class="v">e</span><sup>2</sup> <span class="fn">sin</span><sup>2</sup><span class="v">φ</span><span class="paren">)</span>
+    </div>
+    <p class="where"><b>N</b> is the prime vertical radius of curvature, <b>M</b> the meridional, <b>a</b> = 6,378,137 m, <b>e</b>² = 6.694379990×10⁻³, and <b>δ</b> the cell side in radians. Validated against a known value: 769.3 m² at the equator for a 1/4000° cell.</p>
+  </div>
+
+  <p>The forest-loss raster is categorical — the pixel value is the year of loss, a class code, not a quantity — so reprojecting it to an equal-area grid would resample class codes and invent years that were never recorded. Computing the cell area analytically from each row's latitude avoids touching the data at all, and it is faster by hours.</p>
+
+  <div class="formula">
+    <p class="name">Case concentration in the conflict record</p>
+    <div class="math">
+      <span class="v">s</span><sub>ij</sub> <span class="op">=</span>
+      <span class="frac"><span class="num"><span class="v">n</span><sub>ij</sub></span><span class="den"><span class="big">Σ</span><sub>j</sub> <span class="v">n</span><sub>ij</sub></span></span>
+      <span class="op">,</span>
+      <span class="v">H</span><sub>i</sub> <span class="op">=</span>
+      <span class="big">Σ</span><sub>j</sub> <span class="v">s</span><sub>ij</sub><sup>2</sup>
+      <span class="op">,</span>
+      top<sub>i</sub> <span class="op">=</span>
+      <span class="fn">max</span><sub>j</sub> <span class="v">s</span><sub>ij</sub>
+    </div>
+    <p class="where"><b>n</b><sub>ij</sub> is the number of recorded occurrences in municipality <b>i</b> belonging to distinct case <b>j</b>, where a case is a normalised value of the archive's own conflict-name field.</p>
+  </div>
+
+  <p>This is the one formula on the page that produced a finding rather than an estimate. The conflict archive re-registers a continuing situation each year it stays unresolved, so a municipality with one eighteen-year occupation records the same count as one with eighteen separate incursions. Across Roraima the median municipality's <span class="fn">top</span><sub>i</sub> is <strong>0.58</strong>, against 0.05–0.16 in every other state in the region. A conflict count is therefore partly a measure of duration, and any ranking built on raw counts puts the longest-unresolved places at the top and calls it intensity.</p>
+
+  <p class="where" style="max-width:68ch">Because the conflict-name field is free text, the same dispute spelled two ways counts as two cases, which biases distinct-case counts up and concentration down. The measured concentration is a lower bound.</p>
+</section>
+
+<section>
+  <p class="beat">9 — Withdrawn</p>
+  <h2>A formula that is on this page so that it is not quietly missing</h2>
+
+  <div class="formula">
+    <p class="name">Sentinel-1 backscatter change — <b>withdrawn, not reproducible</b></p>
+    <div class="math">
+      Δ<span class="v">VH</span><sub>dB</sub> <span class="op">=</span>
+      10 <span class="fn">log</span><sub>10</sub><span class="paren">(</span><span class="v">γ</span><sup>0</sup><sub>post</sub><span class="paren">)</span>
+      <span class="op">−</span>
+      10 <span class="fn">log</span><sub>10</sub><span class="paren">(</span><span class="v">γ</span><sup>0</sup><sub>pre</sub><span class="paren">)</span>
+    </div>
+    <p class="where">Terrain-flattened backscatter, temporal median within season-matched dry-season windows either side of the forest-monitoring year, speckle-filtered in linear power before any conversion to decibels.</p>
+  </div>
+
+  <p>The detector was built to estimate what the optical deforestation product misses under cloud. Running it on 14 September returned an area under the curve of 0.675 against the official polygons, and re-running it on the same imagery search 22 hours later returned 0.783. The cause was that the code silently dropped scenes that failed to load or covered too little of the area, so the temporal median depended on which downloads happened to succeed. <strong>Both numbers are withdrawn</strong> — the better-looking one is no more trustworthy for being better. The code now retries, records every dropped scene with a reason, and writes the actual date span of each median into its output; nothing from it will be quoted until two runs agree.</p>
+</section>
+
+<div class="pager">
+  <a href="index.html">← The argument</a>
+  <a href="maps.html">← Maps &amp; charts</a>
+  <a href="methods.html">Methods →</a>
+</div>
+
+</main>
+
+<footer>
+  <p><b>Implementations.</b> The panel estimator, cluster-robust variance, false-discovery correction and panel unit-root test are in <code>src/04_econ/panel_tools.py</code>; the land Gini in <code>src/02_acquire/get_censo_agro.py</code>; the graticule cell area in <code>src/02_acquire/aggregate_hansen.py</code>; case concentration in <code>src/04_econ/case_concentration.py</code>. Written by hand rather than taken from a package, because the panel library was unavailable in this environment — which means the small-sample correction above is the one actually used, not a library default.</p>
+  <p><b>Sahasrik Ragani</b> · all currency in constant 2023 reais.</p>
+</footer>
+
+</div>
+</body>
+</html>

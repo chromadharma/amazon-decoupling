@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maps &amp; charts — Amazon deforestation and growth</title>
+<meta name="description" content="All nine figures from the Amazon decoupling panel, each with what it shows and what its construction is doing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav"><div class="wrap">
+  <a class="mark" href="index.html">44°W</a>
+  <a class="page" href="index.html">The argument</a>
+  <a class="page" href="maps.html" aria-current="page">Maps &amp; charts</a>
+  <a class="page" href="methods.html">Methods</a>
+  <a class="page" href="formulas.html">Formulas</a>
+</div></nav>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Nine figures</p>
+  <h1>Maps and charts
+    <span class="sub">What each one shows, and what its construction is quietly deciding</span>
+  </h1>
+  <p class="byline"><b>Sahasrik Ragani</b> · Viridis and Archivo, plain white ground · all area arithmetic in South America Albers equal-area</p>
+</header>
+
+<main>
+
+<section>
+  <p class="beat">How to read this page</p>
+  <h2>Every figure here has a second caption</h2>
+
+  <p>The first caption on each figure says what is plotted. The paragraph underneath says what the figure is <em>doing</em> — which denominator it chose, where it put the midpoint of a colour scale, what it excluded and why. Those choices are not housekeeping. A clipped scale decides which municipalities look extreme; a diverging palette decides where "normal" sits and therefore who is doing something unusual. The only protection a reader has is that somebody wrote down which way the choice went, so that is what this page is for.</p>
+</section>
+
+<section>
+  <p class="beat">1 — The region</p>
+  <h2>The administrative Amazon against the ecological one</h2>
+
+  <figure>
+    <img src="assets/figures/map04_biome_mask.png" alt="Map of the Legal Amazon with each municipality shaded by its share of Amazônia biome: wholly biome, partly, or under five per cent.">
+    <figcaption><b>Figure M1 · A third of the Legal Amazon is not Amazon forest.</b> Share of each municipality inside the Amazônia biome, IBGE 250k biome map on the 2022 municipal mesh. 426 municipalities wholly biome, 120 partly, 226 under five per cent.</figcaption>
+  </figure>
+
+  <p>What it is doing: defining the sample. The 226 pale municipalities are Cerrado and Pantanal inside a 1953 planning boundary, and the official deforestation product cannot map clearing there at all. Including them with a clearing value of zero would estimate an average over a population containing cases where the outcome is impossible by construction, which attenuates every coefficient in the study. The five per cent biome threshold that produces the 546-municipality modelling sample is therefore a claim about what the object of study is, not a data-cleaning step.</p>
+
+  <figure>
+    <img src="assets/figures/map01_clearing_intensity.png" alt="Choropleth of the Legal Amazon showing percentage of each municipality cleared 2008 to 2025, with a bright arc from the south-west through northern Mato Grosso to eastern Pará.">
+    <figcaption><b>Figure M2 · Where the clearing was, 2008–2025.</b> Annual clear-cut increments summed by municipality as a share of in-boundary area. Grey municipalities lie outside the forest mask: not measured, not zero. Scale clipped at the 98th percentile, 15.5%.</figcaption>
+  </figure>
+
+  <p>What it is doing: three decisions, and the third is the uncomfortable one. The denominator is the municipality's area <em>inside</em> the Legal Amazon rather than its whole area, which matters for the twenty Maranhão municipalities the boundary cuts through — using the whole area made Morros, 4.7% inside, look twenty-one times less deforested than it is. The grey is exclusion rather than a low value. And the colour scale is clipped at the 98th percentile, because without the clip two or three extreme municipalities stretch the ramp until the entire arc collapses into one indistinguishable dark band. Clipping buys legibility and pays for it by flattening the extremes into the same yellow as municipalities doing half as much.</p>
+</section>
+
+<section>
+  <p class="beat">2 — What gets counted as deforestation</p>
+  <h2>Two instruments, one agency, different answers</h2>
+
+  <figure>
+    <img src="assets/figures/fig01_two_rates.png" alt="Time series of annual disturbed area in the Legal Amazon: a line for the official annual clear-cut increment against stacked bars of alert area by class group.">
+    <figcaption><b>Figure 1 · Two measurements of the same forest.</b> The line is the PRODES annual clear-cut increment, aggregated from 835,277 polygons and attributed to municipalities by the author. Bars are DETER alert area by class group. PRODES years run 1 August to 31 July; DETER years are calendar years, so the two are deliberately not aligned.</figcaption>
+  </figure>
+
+  <p>What it is doing: refusing to harmonise two series that are not the same measurement. It would be easy to put both on a common calendar and let the reader compare heights, and it would be wrong — one is an annual mapped increment, the other an alert system whose areas are not level-comparable. The misalignment is left visible on purpose.</p>
+
+  <figure>
+    <img src="assets/figures/fig02_measurement_gap.png" alt="Bar chart of the share of observed disturbed area falling in degradation, burn scar, mining and disordered-cut classes each year from 2017 to 2025.">
+    <figcaption><b>Figure 2 · What the deforestation rate does not count.</b> Degradation-family alert classes as a share of all observed disturbed area, by year. Across 2017–2025: 57,005 km² clear-cut against 172,537 km² in the excluded classes, or <b>75.2%</b>. In 2024 alone, 93%.</figcaption>
+  </figure>
+
+  <p>What it is doing: stating an upper bound and saying so. Alerts are not deduplicated across years, so an area disturbed in two successive years is counted twice and the share is inflated by an unknown amount. The definitional boundary is not in doubt even if the exact percentage is — degradation, burn scar and mining are excluded from the official rate by construction, not by accident of measurement.</p>
+</section>
+
+<section>
+  <p class="beat">3 — Growth and welfare</p>
+  <h2>The ladder, and the null that took a 5.8 GB download to earn</h2>
+
+  <figure>
+    <img src="assets/figures/fig05_coefficients.png" alt="Coefficient plot with confidence intervals for clearing's effect on agricultural value added, GDP, GDP net of public administration, GDP per capita and population, at zero, one and two year lags.">
+    <figcaption><b>Figure 5 · Clearing predicts agricultural value added, and fewer people.</b> Two-way fixed-effects coefficients with 95% intervals, municipality and year effects, errors clustered on municipality. Filled markers clear the 5% threshold; hollow ones do not.</figcaption>
+  </figure>
+
+  <p>What it is doing: showing every rung of the ladder rather than the surviving one. Four of the fifteen estimates plotted are significant and eleven are not, and publishing the whole grid is what makes the four worth anything. The population row is the one to read carefully: it is significant at p = 0.012 and it amounts to −0.07% for a one-standard-deviation increase in clearing, which is a small effect measured precisely. Its job is to block a misreading of the per-capita result, not to carry a claim.</p>
+
+  <figure>
+    <img src="assets/figures/fig03_decoupling.png" alt="Three scatter plots of the change in municipal human development index 2000 to 2010 against agricultural growth, against share cleared 2001 to 2010, and against share cleared 2008 to 2010. All three are flat.">
+    <figcaption><b>Figure 3 · Growth did not buy human development.</b> 543 municipalities. The middle panel is the test that counts: its clearing window, from Hansen Global Forest Change, spans the decade the outcome is measured over. Estimate on the spanning driver: <b>+0.005, p = 0.79</b>.</figcaption>
+  </figure>
+
+  <p>What it is doing: keeping a mistake on the page. The right panel is the specification I started with, where the clearing window covered three of the outcome's ten years — a driver that does not span its own outcome, which cannot test anything. The middle panel is the corrected version. Both are shown because the difference between them is the difference between an uninformative null and a real one, and the standard errors fell by a factor of five when the window was fixed.</p>
+</section>
+
+<section>
+  <p class="beat">4 — Land</p>
+  <h2>Concentration fell, except where the clearing was</h2>
+
+  <figure>
+    <img src="assets/figures/fig04_land_concentration.png" alt="Scatter of the change in municipal land Gini between the 2006 and 2017 agricultural censuses against the share of municipal area cleared over the same window, points coloured by agricultural growth rank.">
+    <figcaption><b>Figure 4 · Land concentration fell on average, but not where the clearing was.</b> Change in municipal land Gini, 2006 to 2017 censuses, against share cleared over the intervening years. Point colour is the municipality's percentile rank in agricultural growth.</figcaption>
+  </figure>
+
+  <p>What it is doing: leading with the result that argues against the hypothesis. Regionally the land Gini <em>fell</em>, by a mean of 0.045, with only 38% of municipalities rising. That is stated first because the conditional result underneath it — clearing predicting a rise in the share of farmland held in units of 1,000 hectares or more, at +0.875 with p = 0.007 — is only credible if the unfavourable headline comes before it. Two corrections inside the Gini are worth knowing: producers reporting no land are placed at the zero-area end, which moved the regional mean by around 0.15 of a Gini point, and 2017's split top classes are collapsed to the 2006 structure, without which the two censuses are not the same instrument.</p>
+
+  <figure>
+    <img src="assets/figures/map02_land_gini_change.png" alt="Diverging choropleth of the change in municipal land concentration between 2006 and 2017, orange for concentrating and purple for dispersing.">
+    <figcaption><b>Figure M3 · Land concentration, 2006 to 2017.</b> Municipal land Gini from the two agricultural censuses with harmonised size classes; orange is concentrating. Regional mean change <b>−0.045</b>. Grey covers both municipalities outside the modelling sample and municipalities with no census figure.</figcaption>
+  </figure>
+
+  <p>What it is doing: making an argument with a midpoint. The palette diverges from white and white sits at zero change, which declares that "no change" is the natural reference every municipality is judged against. Centre the same scale on the regional mean of −0.045 instead and roughly half the map changes colour: places currently reading as mildly concentrating would read as concentrating <em>faster than the region around them</em>. Same data, same municipalities, different politics. The grey is also doing double duty here, covering two different problems — outside the sample, and no census figure — with one colour, which is a defect rather than a choice.</p>
+</section>
+
+<section>
+  <p class="beat">5 — Case selection</p>
+  <h2>The index that found the longest-suffering place and called it the most intense</h2>
+
+  <figure>
+    <img src="assets/figures/map03_anchor_shortlist.png" alt="Map of the Legal Amazon shaded by a composite percentile rank across five criteria, with Mucajaí in Roraima outlined and labelled.">
+    <figcaption><b>Figure M4 · Candidate cases for the qualitative anchor.</b> Mean of five within-sample percentile ranks: agricultural boom, clearing, weak human development gain, rising land concentration, and recorded land conflict per head. Mucajaí is the only municipality above the 80th percentile on all five; 45 clear at least three.</figcaption>
+  </figure>
+
+  <p>What it is doing: asserting that five incommensurable things can be averaged. A composite of percentile ranks treats a municipality in the 90th percentile for clearing and the 70th for conflict as equivalent to one placed the other way round, and ranks discard magnitude entirely, so the top-ranked municipality on any criterion might be barely ahead of the second or ten times ahead. The conflict criterion is also computed over only the seven observed years within 2007–2017, because the conflict archive has gaps.</p>
+
+  <div class="note">
+    <p class="beat">And then the index led somewhere it did not intend</p>
+    <p>Reading what was actually recorded in Mucajaí: of its 162 conflict occurrences, <b>91 carry the same case name</b> — the Yanomami Indigenous Territory, running continuously from 2007 to 2025. Neighbouring Caracaraí records 83 of its 138 under that same name. Across Roraima the median municipality holds <b>58%</b> of its entire conflict record in one single case, against 5–16% in every other state in the region.</p>
+    <p>So a conflict count is partly a measure of <b>duration</b> rather than intensity, and any ranking built on raw counts will put the places where one dispute has gone longest unresolved at the top. Those call for different responses: a long-unresolved invasion needs a legal or demarcation remedy, a cluster of new disputes needs presence on the ground. The measure cannot tell them apart, and it misfires hardest on Indigenous territories because that is where the long cases sit.</p>
+  </div>
+</section>
+
+<div class="pager">
+  <a href="index.html">← The argument</a>
+  <a href="methods.html">Methods →</a>
+  <a href="formulas.html">Formulas →</a>
+</div>
+
+</main>
+
+<footer>
+  <p><b>Figure provenance.</b> Charts and maps built in Python/matplotlib in the author's house style: Viridis sequential and diverging ramps, Archivo, plain white ground. All area arithmetic in South America Albers equal-area; choropleth geometry from the IBGE 2022 municipal mesh. Deforestation polygons are attributed to municipalities by the author, since the official product carries no municipality field — the method and its measured 0.41% error are on the <a href="methods.html">methods page</a>.</p>
+  <p><b>Sahasrik Ragani</b> · all currency in constant 2023 reais.</p>
+</footer>
+
+</div>
+</body>
+</html>
