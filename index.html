@@ -7,7 +7,7 @@
 <meta name="description" content="A municipal panel of the Brazilian Legal Amazon testing whether deforestation-driven growth delivers development. Data, methods and formulas in full.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Archivo:wght@400;500;600;700&display=swap">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
 <link rel="stylesheet" href="assets/style.css">
@@ -127,6 +127,13 @@
 
   <p>Brazil's official deforestation rate counts clear-cut of primary forest, at least 6.25 hectares at a time, inside a fixed forest mask, on a year running from the first of August. Every clause in that sentence is a decision. Forest that is degraded but not cleared does not count. Forest that burns does not count. A mining pit does not count. A family clearing two hectares does not count while a rancher clearing two hundred does, which means the threshold is also, quietly, a filter that makes the instrument better at seeing large actors than small ones.</p>
 
+  <figure class="motion">
+    <video controls muted playsinline preload="metadata" poster="assets/figures/the_frontier_moves_poster.jpg" aria-label="Animated map of the Legal Amazon, 2001 to 2025, filling in with dots as satellite-detected forest loss accumulates along an arc from Rondônia through Mato Grosso to eastern Pará, with a bar counter of annual loss against the official clear-cut rate.">
+      <source src="assets/figures/the_frontier_moves.mp4" type="video/mp4">
+    </video>
+    <figcaption><b>The frontier moves, 2001–2025.</b> Cumulative tree-cover loss (canopy of 25% or more in 2000) as a share of each ~16 km square, from Hansen Global Forest Change. The counter sets each year's satellite loss against the official PRODES clear-cut rate: 2.9 times over 2008–2025, 6.0 in the 2024 drought. Satellite loss includes fire and degradation, which is the point.</figcaption>
+  </figure>
+
   <div class="finding">
     <p class="says">Three-quarters of the forest disturbance Brazil's own space agency observes falls outside the definition it reports as the deforestation rate.</p>
     <p class="stat"><span>clear-cut <b>57,005 km²</b></span><span>everything else <b>172,537 km²</b></span><span><b>75.2%</b></span><span>2017–2025</span></p>
@@ -154,6 +161,13 @@
     <p class="says">Clearing also predicts recorded land conflict, and killings in those conflicts.</p>
     <p class="stat"><span>land conflicts <b>+19.4</b>, p <b>0.005</b></span><span>killings <b>+4.27</b>, p <b>0.010</b></span><span>n <b>7,098</b> / <b>7,644</b></span></p>
   </div>
+
+  <figure class="motion">
+    <video controls muted playsinline preload="metadata" poster="assets/figures/clearing_then_conflict_poster.jpg" aria-label="Animated map of the Legal Amazon, 2008 to 2025: dots show each municipality's clearing that year and pink rings the land conflicts recorded there; three years with no conflict records are marked as missing.">
+      <source src="assets/figures/clearing_then_conflict.mp4" type="video/mp4">
+    </video>
+    <figcaption><b>Clearing, then conflict, 2008–2025.</b> Dots: each municipality's PRODES clearing that year as a share of its area. Rings: land conflicts the Comissão Pastoral da Terra recorded there that year. 2009, 2010 and 2017 have no parsed CPT report and are shown as missing, not as zero. Associations, not causes.</figcaption>
+  </figure>
 
   <p>Two honest limits travel with that. The conflict archive is compiled by the Catholic Church's land commission rather than the state, so it counts what was <em>reported</em>, and municipality fixed effects absorb the permanent reporting density of a place but not changes in reporting effort over time. And a conflict count turns out to be partly a measure of duration rather than intensity, for reasons set out on the <a href="maps.html">maps page</a> — in Roraima the median municipality holds fifty-eight per cent of its entire conflict record in a single unresolved case, against five to sixteen per cent in every other state in the region.</p>
 </section>
@@ -192,7 +206,7 @@
 
 <footer>
   <p><b>Sources.</b> INPE PRODES and DETER via the TerraBrasilis geoserver · IBGE SIDRA tables 5938 (municipal gross domestic product), 6579 (population), 1737 (inflation index), and the 2006 and 2017 Agricultural Censuses · Atlas do Desenvolvimento Humano no Brasil (UNDP / IPEA / João Pinheiro Foundation) · Hansen Global Forest Change 2025 v1.13, University of Maryland · Comissão Pastoral da Terra, <i>Conflitos no Campo Brasil</i>, 2003–2025.</p>
-  <p><b>Sahasrik Ragani.</b> All currency in constant 2023 reais. Charts and maps in Viridis and Archivo. Municipal attribution of deforestation polygons is the author's own and its error is measured on the <a href="methods.html">methods page</a>.</p>
+  <p><b>Sahasrik Ragani.</b> All currency in constant 2023 reais. Charts, maps and animations in the author's Gloss Atlas house style (Fraunces and Archivo, viridis). Municipal attribution of deforestation polygons is the author's own and its error is measured on the <a href="methods.html">methods page</a>.</p>
 </footer>
 
 </div>

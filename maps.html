@@ -7,7 +7,7 @@
 <meta name="description" content="All nine figures from the Amazon decoupling panel, each with what it shows and what its construction is doing.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Archivo:wght@400;500;600;700&display=swap">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
 <link rel="stylesheet" href="assets/style.css">
@@ -29,7 +29,7 @@
   <h1>Maps and charts
     <span class="sub">What each one shows, and what its construction is quietly deciding</span>
   </h1>
-  <p class="byline"><b>Sahasrik Ragani</b> · Viridis and Archivo, plain white ground · all area arithmetic in South America Albers equal-area</p>
+  <p class="byline"><b>Sahasrik Ragani</b> · Gloss Atlas: Fraunces and Archivo, viridis, plain white ground · all area arithmetic in South America Albers equal-area</p>
 </header>
 
 <main>
@@ -39,6 +39,29 @@
   <h2>Every figure here has a second caption</h2>
 
   <p>The first caption on each figure says what is plotted. The paragraph underneath says what the figure is <em>doing</em> — which denominator it chose, where it put the midpoint of a colour scale, what it excluded and why. Those choices are not housekeeping. A clipped scale decides which municipalities look extreme; a diverging palette decides where "normal" sits and therefore who is doing something unusual. The only protection a reader has is that somebody wrote down which way the choice went, so that is what this page is for.</p>
+</section>
+
+<section>
+  <p class="beat">0 — In motion</p>
+  <h2>Two animations, because the argument happens over time</h2>
+
+  <figure class="motion">
+    <video controls muted playsinline preload="metadata" poster="assets/figures/the_frontier_moves_poster.jpg" aria-label="Animated map of the Legal Amazon, 2001 to 2025, filling in with dots as satellite-detected forest loss accumulates along an arc from Rondônia through Mato Grosso to eastern Pará, with a bar counter of annual loss against the official clear-cut rate.">
+      <source src="assets/figures/the_frontier_moves.mp4" type="video/mp4">
+    </video>
+    <figcaption><b>The frontier moves, 2001–2025.</b> Cumulative tree-cover loss (canopy of 25% or more in 2000) as a share of each ~16 km square, from Hansen Global Forest Change. The counter sets each year's satellite loss against the official PRODES clear-cut rate: 2.9 times over 2008–2025, 6.0 in the 2024 drought. Satellite loss includes fire and degradation, which is the point.</figcaption>
+  </figure>
+
+  <p>What it is doing: accumulating, so the map can only fill in. Each frame shows everything lost since 2001, not that year's loss, which makes the frontier's direction readable but hides any regrowth. The dots use a 0.6 gamma so the thin early loss is visible at all, and the colour scale caps at 40% of a square, which flattens the most cleared squares into the same yellow. It uses Hansen rather than PRODES because PRODES carries no annual increments before 2008, and because Hansen counts what the official rate leaves out.</p>
+
+  <figure class="motion">
+    <video controls muted playsinline preload="metadata" poster="assets/figures/clearing_then_conflict_poster.jpg" aria-label="Animated map of the Legal Amazon, 2008 to 2025: dots show each municipality's clearing that year and pink rings the land conflicts recorded there; three years with no conflict records are marked as missing.">
+      <source src="assets/figures/clearing_then_conflict.mp4" type="video/mp4">
+    </video>
+    <figcaption><b>Clearing, then conflict, 2008–2025.</b> Dots: each municipality's PRODES clearing that year as a share of its area. Rings: land conflicts the Comissão Pastoral da Terra recorded there that year. 2009, 2010 and 2017 have no parsed CPT report and are shown as missing, not as zero. Associations, not causes.</figcaption>
+  </figure>
+
+  <p>What it is doing: showing each year on its own, not accumulating, so the eye compares years rather than watching a total grow. Each ring sits on a representative point inside its municipality, not where the conflict happened. The conflict archive counts what was reported, and 83% of its occurrences were matched to a municipality, so the rings are a lower bound. The three years with no parsed report are shown as gaps because a zero there would be a fabricated calm.</p>
 </section>
 
 <section>
@@ -53,7 +76,7 @@
   <p>What it is doing: defining the sample. The 226 pale municipalities are Cerrado and Pantanal inside a 1953 planning boundary, and the official deforestation product cannot map clearing there at all. Including them with a clearing value of zero would estimate an average over a population containing cases where the outcome is impossible by construction, which attenuates every coefficient in the study. The five per cent biome threshold that produces the 546-municipality modelling sample is therefore a claim about what the object of study is, not a data-cleaning step.</p>
 
   <figure>
-    <img src="assets/figures/map01_clearing_intensity.png" alt="Choropleth of the Legal Amazon showing percentage of each municipality cleared 2008 to 2025, with a bright arc from the south-west through northern Mato Grosso to eastern Pará.">
+    <img src="assets/figures/map01_clearing_intensity.png" alt="Dot map of the Legal Amazon showing percentage of each municipality cleared 2008 to 2025, dot size and colour on the same scale, with a bright arc from the south-west through northern Mato Grosso to eastern Pará.">
     <figcaption><b>Figure M2 · Where the clearing was, 2008–2025.</b> Annual clear-cut increments summed by municipality as a share of in-boundary area. Grey municipalities lie outside the forest mask: not measured, not zero. Scale clipped at the 98th percentile, 15.5%.</figcaption>
   </figure>
 
@@ -65,7 +88,7 @@
   <h2>Two instruments, one agency, different answers</h2>
 
   <figure>
-    <img src="assets/figures/fig01_two_rates.png" alt="Time series of annual disturbed area in the Legal Amazon: a line for the official annual clear-cut increment against stacked bars of alert area by class group.">
+    <img src="assets/figures/fig01_two_rates.png" alt="Time series of annual disturbed area in the Legal Amazon: a line for the official annual clear-cut increment against paired bars of alert area, clear-cut in grey and degradation in blue.">
     <figcaption><b>Figure 1 · Two measurements of the same forest.</b> The line is the PRODES annual clear-cut increment, aggregated from 835,277 polygons and attributed to municipalities by the author. Bars are DETER alert area by class group. PRODES years run 1 August to 31 July; DETER years are calendar years, so the two are deliberately not aligned.</figcaption>
   </figure>
 
@@ -103,15 +126,15 @@
   <h2>Concentration fell, except where the clearing was</h2>
 
   <figure>
-    <img src="assets/figures/fig04_land_concentration.png" alt="Scatter of the change in municipal land Gini between the 2006 and 2017 agricultural censuses against the share of municipal area cleared over the same window, points coloured by agricultural growth rank.">
-    <figcaption><b>Figure 4 · Land concentration fell on average, but not where the clearing was.</b> Change in municipal land Gini, 2006 to 2017 censuses, against share cleared over the intervening years. Point colour is the municipality's percentile rank in agricultural growth.</figcaption>
+    <img src="assets/figures/fig04_land_concentration.png" alt="Scatter of the change in municipal land Gini between the 2006 and 2017 agricultural censuses against the share of municipal area cleared over the same window, with the average change in each band of clearing and its 95% confidence interval.">
+    <figcaption><b>Figure 4 · Land concentration fell on average, but not where the clearing was.</b> Change in municipal land Gini, 2006 to 2017 censuses, against share cleared over the intervening years. Blue markers are binned means with 95% confidence intervals; grey points are municipalities.</figcaption>
   </figure>
 
   <p>What it is doing: leading with the result that argues against the hypothesis. Regionally the land Gini <em>fell</em>, by a mean of 0.045, with only 38% of municipalities rising. That is stated first because the conditional result underneath it — clearing predicting a rise in the share of farmland held in units of 1,000 hectares or more, at +0.875 with p = 0.007 — is only credible if the unfavourable headline comes before it. Two corrections inside the Gini are worth knowing: producers reporting no land are placed at the zero-area end, which moved the regional mean by around 0.15 of a Gini point, and 2017's split top classes are collapsed to the 2006 structure, without which the two censuses are not the same instrument.</p>
 
   <figure>
-    <img src="assets/figures/map02_land_gini_change.png" alt="Diverging choropleth of the change in municipal land concentration between 2006 and 2017, orange for concentrating and purple for dispersing.">
-    <figcaption><b>Figure M3 · Land concentration, 2006 to 2017.</b> Municipal land Gini from the two agricultural censuses with harmonised size classes; orange is concentrating. Regional mean change <b>−0.045</b>. Grey covers both municipalities outside the modelling sample and municipalities with no census figure.</figcaption>
+    <img src="assets/figures/map02_land_gini_change.png" alt="Diverging choropleth of the change in municipal land concentration between 2006 and 2017, pink for concentrating and teal for dispersing.">
+    <figcaption><b>Figure M3 · Land concentration, 2006 to 2017.</b> Municipal land Gini from the two agricultural censuses with harmonised size classes; pink is concentrating. Regional mean change <b>−0.045</b>. Grey covers both municipalities outside the modelling sample and municipalities with no census figure.</figcaption>
   </figure>
 
   <p>What it is doing: making an argument with a midpoint. The palette diverges from white and white sits at zero change, which declares that "no change" is the natural reference every municipality is judged against. Centre the same scale on the regional mean of −0.045 instead and roughly half the map changes colour: places currently reading as mildly concentrating would read as concentrating <em>faster than the region around them</em>. Same data, same municipalities, different politics. The grey is also doing double duty here, covering two different problems — outside the sample, and no census figure — with one colour, which is a defect rather than a choice.</p>
@@ -144,7 +167,7 @@
 </main>
 
 <footer>
-  <p><b>Figure provenance.</b> Charts and maps built in Python/matplotlib in the author's house style: Viridis sequential and diverging ramps, Archivo, plain white ground. All area arithmetic in South America Albers equal-area; choropleth geometry from the IBGE 2022 municipal mesh. Deforestation polygons are attributed to municipalities by the author, since the official product carries no municipality field — the method and its measured 0.41% error are on the <a href="methods.html">methods page</a>.</p>
+  <p><b>Figure provenance.</b> Charts, maps and animations built in Python (matplotlib, with a Taichi dot-grid renderer for the value maps) in the author's Gloss Atlas house style: Fraunces and Archivo, a viridis ramp for values, one highlight colour per chart, plain white ground. All area arithmetic in South America Albers equal-area; choropleth geometry from the IBGE 2022 municipal mesh. Deforestation polygons are attributed to municipalities by the author, since the official product carries no municipality field — the method and its measured 0.41% error are on the <a href="methods.html">methods page</a>.</p>
   <p><b>Sahasrik Ragani</b> · all currency in constant 2023 reais.</p>
 </footer>
 
